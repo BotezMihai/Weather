@@ -1,13 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Weather;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import net.minidev.json.JSONArray;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
 
 @Service
 public class WeatherService {
@@ -37,9 +41,35 @@ public class WeatherService {
 
         weather.setClouds(jsonObject.get("clouds").getAsJsonObject().get("all").getAsDouble());
 
-        weather.setCountry(jsonObject.get("country").getAsString());
+        JsonObject element = jsonObject.get("sys").getAsJsonObject();
+        System.out.println(element.get("country"));
+        weather.setCountry(element.get("country").getAsString());
 
-        weather.setCity(jsonObject.get("city").getAsString());
+        weather.setCity(jsonObject.get("name").getAsString());
+
+
+        try {
+            writeJson(weather);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+   }
+
+    private void writeJson(Weather weather) throws IOException {
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+       // FileWriter writer = new FileWriter("weather.json");
+       // System.out.println("json ul e"+gson.toJson(weather));
+        JsonParser jsonParser = new JsonParser();
+        Object obj = jsonParser.parse(new FileReader("C:\\Users\\mihai.botez\\Desktop\\git\\Proiect\\Weather\\WeatherApp\\src\\main\\java\\com\\example\\demo\\service\\weather.json"));
+        JSONArray jsonArray = (JSONArray)obj;
+        jsonArray.add(gson.toJson(weather));
+        FileWriter file = new FileWriter("./weather.json");
+        file.write(jsonArray.toJSONString());
+        file.flush();
+        file.close();
 
 
 
