@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Weather;
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import net.minidev.json.JSONArray;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.List;
 
 
 @Service
@@ -30,8 +31,8 @@ public class WeatherService {
         weather.setMain(weatherElement.getAsJsonObject().get("main").getAsString());
         weather.setDescription(weatherElement.getAsJsonObject().get("description").getAsString());
 
-        double fahrenheit = jsonObject.get("main").getAsJsonObject().get("temp").getAsDouble();
-        double celsius = ((fahrenheit - 32) * 5) / 9;
+        double kelvin = jsonObject.get("main").getAsJsonObject().get("temp").getAsDouble();
+        double celsius = kelvin -273.15;
         System.out.println(celsius);
         weather.setTemperature(celsius);
 
@@ -47,31 +48,26 @@ public class WeatherService {
 
         weather.setCity(jsonObject.get("name").getAsString());
 
-
         try {
             writeJson(weather);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-   }
+    }
 
     private void writeJson(Weather weather) throws IOException {
-
+        //creez un obiect gson
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-       // FileWriter writer = new FileWriter("weather.json");
-       // System.out.println("json ul e"+gson.toJson(weather));
-        JsonParser jsonParser = new JsonParser();
-        Object obj = jsonParser.parse(new FileReader("C:\\Users\\mihai.botez\\Desktop\\git\\Proiect\\Weather\\WeatherApp\\src\\main\\java\\com\\example\\demo\\service\\weather.json"));
-        JSONArray jsonArray = (JSONArray)obj;
-        jsonArray.add(gson.toJson(weather));
-        FileWriter file = new FileWriter("./weather.json");
-        file.write(jsonArray.toJSONString());
-        file.flush();
-        file.close();
-
-
-
+        Gson gson = builder.setLenient().create();
+        //citesc din weather.json
+        JsonElement obj = new JsonParser().parse(new FileReader("D:/Programare/InternshipNTT/Proiect22072019/Weather/WeatherApp/src/main/java/com/example/demo/service/weather.json"));
+        JsonArray arr = obj.getAsJsonArray();
+        //adaug element in array
+        arr.add(gson.toJson(weather));
+        //scriu in fisier
+        String jsonString = gson.toJson(arr);
+        FileWriter fileWriter = new FileWriter("D:/Programare/InternshipNTT/Proiect22072019/Weather/WeatherApp/src/main/java/com/example/demo/service/weather.json");
+        fileWriter.write(jsonString);
+        fileWriter.close();
     }
 }
