@@ -20,17 +20,6 @@ public class WeatherController {
 
     @RequestMapping(value = "/{place}", method = RequestMethod.GET)
     public void getWeatherNow(@PathVariable("place") String place) {
-        String key = "58f9b3be23fbf4bff065c9fa498cbe75";
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://api.openweathermap.org/data/2.5/weather?q=" + place + "&APPID=" + key;
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        //System.out.println(response);
-        String test = response.getBody();
-        JsonObject jsonObject = new JsonParser().parse(test).getAsJsonObject();
-        System.out.print(jsonObject.get("coord"));
-
-
+        weatherService.getWeatherNow(place);
     }
-
-
 }
