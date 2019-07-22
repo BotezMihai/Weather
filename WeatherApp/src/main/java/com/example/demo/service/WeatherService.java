@@ -20,8 +20,8 @@ public class WeatherService {
         JsonObject jsonObject = new JsonParser().parse(test).getAsJsonObject();
         System.out.print(jsonObject.get("coord"));
         System.out.println(jsonObject.get("weather"));
-        Weather weather = new Weather();
-        weather.setMain(jsonObject.get("weather.main").getAsString());
-        weather.setDescription(jsonObject.get("weather.description").getAsString());
+//        Weather weather = new Weather();
+//        weather.setMain(jsonObject.get("weather.main").getAsString());
+//        weather.setDescription(jsonObject.get("weather.description").getAsString());
     }
 }
