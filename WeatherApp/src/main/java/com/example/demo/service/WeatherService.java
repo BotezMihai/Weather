@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Weather;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +18,30 @@ public class WeatherService {
         String url = "https://api.openweathermap.org/data/2.5/weather?q=" + place + "&APPID=" + key;
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         //System.out.println(response);
-        String test = response.getBody();
-        JsonObject jsonObject = new JsonParser().parse(test).getAsJsonObject();
-        System.out.print(jsonObject.get("coord"));
-        System.out.println(jsonObject.get("weather"));
+        String body = response.getBody();
+        JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
+        JsonElement weatherElement = jsonObject.get("weather").getAsJsonArray().get(0);
+        System.out.println(weatherElement.getAsJsonObject().get("main"));
         Weather weather = new Weather();
-        weather.setMain(jsonObject.get("weather.main").getAsString());
-        weather.setDescription(jsonObject.get("weather.description").getAsString());
+        weather.setMain(weatherElement.getAsJsonObject().get("main").getAsString());
+        weather.setDescription(weatherElement.getAsJsonObject().get("description").getAsString());
+
+        double fahrenheit = jsonObject.get("main").getAsJsonObject().get("temp").getAsDouble();
+        double celsius = ((fahrenheit - 32) * 5) / 9;
+        System.out.println(celsius);
+        weather.setTemperature(celsius);
+
+        weather.setUmidity(jsonObject.get("main").getAsJsonObject().get("humidity").getAsDouble());
+
+        weather.setWindSpeed(jsonObject.get("wind").getAsJsonObject().get("speed").getAsDouble());
+
+        weather.setClouds(jsonObject.get("clouds").getAsJsonObject().get("all").getAsDouble());
+
+        weather.setCountry(jsonObject.get("country").getAsString());
+
+        weather.setCity(jsonObject.get("city").getAsString());
+
+
+
     }
 }
