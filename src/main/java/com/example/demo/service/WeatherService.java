@@ -2,8 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Weather;
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import net.minidev.json.JSONArray;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,7 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+
 
 
 @Service
