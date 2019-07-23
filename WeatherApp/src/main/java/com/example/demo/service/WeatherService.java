@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -60,13 +61,14 @@ public class WeatherService {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setLenient().create();
         //citesc din weather.json
-        JsonElement obj = new JsonParser().parse(new FileReader("D:/Programare/InternshipNTT/Proiect22072019/Weather/WeatherApp/src/main/java/com/example/demo/service/weather.json"));
+        File jsonFile = new File("weather.json");
+        JsonElement obj = new JsonParser().parse(new FileReader(jsonFile.getAbsolutePath()));
         JsonArray arr = obj.getAsJsonArray();
         //adaug element in array
         arr.add(gson.toJson(weather));
         //scriu in fisier
         String jsonString = gson.toJson(arr);
-        FileWriter fileWriter = new FileWriter("D:/Programare/InternshipNTT/Proiect22072019/Weather/WeatherApp/src/main/java/com/example/demo/service/weather.json");
+        FileWriter fileWriter = new FileWriter(jsonFile.getAbsolutePath());
         fileWriter.write(jsonString);
         fileWriter.close();
     }
