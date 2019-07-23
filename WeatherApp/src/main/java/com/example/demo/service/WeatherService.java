@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    public void getWeatherNow(String place) {
+    public Weather getWeatherNow(String place) {
         String key = "58f9b3be23fbf4bff065c9fa498cbe75";
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://api.openweathermap.org/data/2.5/weather?q=" + place + "&APPID=" + key;
@@ -53,6 +53,9 @@ public class WeatherService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setLenient().create();
+        return weather;
     }
 
     private void writeJson(Weather weather) throws IOException {
