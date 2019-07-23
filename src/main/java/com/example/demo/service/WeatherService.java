@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class WeatherService {
 
+
     public Weather getWeatherNow(String place) {
         String key = "58f9b3be23fbf4bff065c9fa498cbe75";
         RestTemplate restTemplate = new RestTemplate();
@@ -59,6 +60,11 @@ public class WeatherService {
         return weather;
     }
 
+    /**
+     *
+     * @param weather
+     * @throws IOException
+     */
     private void writeJson(Weather weather) throws IOException {
         //creez un obiect gson
         GsonBuilder builder = new GsonBuilder();
