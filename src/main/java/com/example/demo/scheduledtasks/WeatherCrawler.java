@@ -26,7 +26,7 @@ public class WeatherCrawler {
     @Autowired
     RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
-    @Scheduled(cron = "0 0 2 ? * * *")
+    @Scheduled(cron = "0 0 2 ? * *")
     public void crawl() {
         String[] cities = {"Alba", "Arad", "Bacau", "Botosani", "Braila", "Brasov", "Bucuresti", "Buzau", "Calarasi", "Caras Severin", "Cluj", "Constanta", "Covasna", "Dambovita", "Dolj", "Galati", "Giurgiu", "Gorj", "Harghita", "Hunedoara", "Ialomita", "Iasi", "Ilfov", "Maramures", "Mehedinti", "Mures", "Neamt", "Olt", "Prahova", "Salaj", "Satu Mare", "Sibiu", "Suceava", "Teleorman", "Timis", "Tulcea", "Valcea", "Vaslui", "Vrancea"};
         for (String city : cities) {
