@@ -26,7 +26,7 @@ public class WeatherCrawler {
     @Autowired
     RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
-    @Value("${api.weatherUrl}")
+    @Value("${url.weatherUrl}")
     String apiUrl;
     @Scheduled(cron = "0 0 2 ? * *")
     public void crawl() {
