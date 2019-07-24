@@ -2,11 +2,9 @@ package com.example.demo.scheduledtasks;
 
 import com.example.demo.entity.Weather;
 import com.example.demo.handlers.RestTemplateResponseErrorHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+
 import com.google.gson.*;
-import com.sun.xml.internal.org.jvnet.fastinfoset.FastInfosetException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
-import java.nio.file.Files;
+
 
 @Component
 public class WeatherCrawler {
