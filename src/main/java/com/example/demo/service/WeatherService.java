@@ -13,10 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-
 @Service
 public class WeatherService {
-
 
     public Weather getWeatherNow(String place) {
         String key = "58f9b3be23fbf4bff065c9fa498cbe75";
@@ -33,7 +31,7 @@ public class WeatherService {
         weather.setDescription(weatherElement.getAsJsonObject().get("description").getAsString());
 
         double kelvin = jsonObject.get("main").getAsJsonObject().get("temp").getAsDouble();
-        double celsius = kelvin -273.15;
+        double celsius = kelvin - 273.15;
         System.out.println(celsius);
         weather.setTemperature(celsius);
 
@@ -60,7 +58,6 @@ public class WeatherService {
     }
 
     /**
-     *
      * @param weather
      * @throws IOException
      */

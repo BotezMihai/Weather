@@ -20,6 +20,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Class containing tests for WeatherController
+ */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = WeatherController.class)
 @WebMvcTest(WeatherController.class)
@@ -30,6 +33,9 @@ public class WeatherControllerTest {
     @MockBean
     private WeatherService weatherService;
 
+    /**
+     * Verifies if the getWeatherNow() method from WeatherController works properly
+     */
     @Test
     public void givenCity_thenReturnJsonResponse() {
         String city = "London";
@@ -46,5 +52,10 @@ public class WeatherControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void whenCityIsNull_thenReturnJsonResponse() {
+
     }
 }

@@ -21,7 +21,7 @@ public class WeatherController {
     public ResponseEntity<String> getWeatherNow(@PathVariable("place") String place) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setLenient().create();
-        Weather weather=weatherService.getWeatherNow(place);
-        return new ResponseEntity<String>(gson.toJson(weather), HttpStatus.OK);
+        Weather weather = weatherService.getWeatherNow(place);
+        return new ResponseEntity<>(gson.toJson(weather), HttpStatus.OK);
     }
 }
