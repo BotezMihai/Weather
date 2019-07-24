@@ -6,6 +6,8 @@ import com.example.demo.handlers.RestTemplateResponseErrorHandler;
 import com.google.gson.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,15 +26,21 @@ public class WeatherCrawler {
     @Autowired
     RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
+    @Value("${api.weatherUrl}")
+    String apiUrl;
     @Scheduled(cron = "0 0 2 ? * *")
     public void crawl() {
+        // do an enum out of this
         String[] cities = {"Alba", "Arad", "Bacau", "Botosani", "Braila", "Brasov", "Bucuresti", "Buzau", "Calarasi", "Caras Severin", "Cluj", "Constanta", "Covasna", "Dambovita", "Dolj", "Galati", "Giurgiu", "Gorj", "Harghita", "Hunedoara", "Ialomita", "Iasi", "Ilfov", "Maramures", "Mehedinti", "Mures", "Neamt", "Olt", "Prahova", "Salaj", "Satu Mare", "Sibiu", "Suceava", "Teleorman", "Timis", "Tulcea", "Valcea", "Vaslui", "Vrancea"};
         for (String city : cities) {
             // call to OWM API
+
+            // put this in the yml file
             String key = "58f9b3be23fbf4bff065c9fa498cbe75";
+
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
-            String url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + ",RO&APPID=" + key;
+            String url = apiUrl + city + ",RO&APPID=" + key;
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             String body = response.getBody();
 
@@ -40,7 +48,7 @@ public class WeatherCrawler {
             JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
             String responseCode = jsonObject.get("cod").getAsString();
 
-            if (!responseCode.equals("404")) {
+            if (!responseCode.equals(HttpStatus.NOT_FOUND.value())) {
                 JsonElement weatherElement = jsonObject.get("weather").getAsJsonArray().get(0);
 
                 // create weather object
