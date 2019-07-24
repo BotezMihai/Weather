@@ -3,6 +3,7 @@ package unittests;
 import com.example.demo.controllers.WeatherController;
 import com.example.demo.entity.Weather;
 import com.example.demo.service.WeatherService;
+import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Class containing tests for WeatherController
@@ -34,7 +34,8 @@ public class WeatherControllerTest {
     private WeatherService weatherService;
 
     /**
-     * Verifies if the getWeatherNow() method from WeatherController works properly
+     * Verifies if given a city the getWeatherNow() method from WeatherController
+     * returns a json response with actual data
      */
     @Test
     public void givenCity_thenReturnJsonResponse() {
@@ -44,7 +45,7 @@ public class WeatherControllerTest {
         given(weatherService.getWeatherNow(city)).willReturn(weather);
 
         try {
-            mvc.perform(get("/weather/London")
+            mvc.perform(get("/weather/" + city)
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.city", is(weather.getCity())))
@@ -54,8 +55,23 @@ public class WeatherControllerTest {
         }
     }
 
+    /**
+     * Verifies if not given a city the getWeatherNow() method from WeatherController
+     * returns a json response with a message and an error code.
+     */
     @Test
-    public void whenCityIsNull_thenReturnJsonResponse() {
+    public void whenCityIsNullOrInvalid_thenReturnJsonResponse() {
+        String city = "";
+        JsonObject expectedResponse = new JsonObject();
+        expectedResponse.addProperty("message", "This city is not in our database!");
+        expectedResponse.addProperty("code", "404");
 
+        given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
+
+        mvc.perform(get("/weather/" + city)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", expectedResponse.get("message")))
+                .andExpect(jsonPath("$.code", expectedResponse.get("code")));
     }
 }
