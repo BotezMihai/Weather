@@ -10,9 +10,10 @@ import java.io.IOException;
 
 public class JsonOperations {
 
-    public JsonOperations(){
+    public JsonOperations() {
 
     }
+
     public void writeJson(Weather weather) throws IOException {
 
         GsonBuilder builder = new GsonBuilder();
@@ -28,5 +29,11 @@ public class JsonOperations {
         FileWriter fileWriter = new FileWriter(jsonFile.getAbsolutePath());
         fileWriter.write(jsonString);
         fileWriter.close();
+    }
+
+    public JsonObject getJsonObject(String json) {
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+        return jsonObject;
     }
 }

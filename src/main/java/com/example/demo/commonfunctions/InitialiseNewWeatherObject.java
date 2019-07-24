@@ -4,16 +4,14 @@ import com.example.demo.constants.ApiWeatherConstants;
 import com.example.demo.entity.Weather;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-
 
 public class InitialiseNewWeatherObject {
 
-    public InitialiseNewWeatherObject(){
+    public InitialiseNewWeatherObject() {
 
     }
-    public Weather functionInitialiseNewWeatherObject(JsonObject jsonObject){
+
+    public Weather functionInitialiseNewWeatherObject(JsonObject jsonObject) {
 
 
         JsonElement weatherElement = jsonObject.get("weather").getAsJsonArray().get(0);
