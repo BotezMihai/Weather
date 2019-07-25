@@ -3,6 +3,8 @@ package unittests;
 import com.example.demo.controllers.WeatherController;
 import com.example.demo.entity.Weather;
 import com.example.demo.service.WeatherService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +43,10 @@ public class WeatherControllerTest {
     public void givenCity_thenReturnJsonResponse() {
         String city = "London";
         Weather weather = new Weather("Clouds", "scattered clouds", 25, 61.0, 4.6, 40.0, "GB", "London");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setLenient().create();
 
-        given(weatherService.getWeatherNow(city)).willReturn(weather);
+        given(weatherService.getWeatherNow(city)).willReturn(gson.toJson(weather));
 
         try {
             mvc.perform(get("/weather/" + city)
@@ -56,22 +60,29 @@ public class WeatherControllerTest {
     }
 
     /**
-     * Verifies if not given a city the getWeatherNow() method from WeatherController
+     * Verifies if not given an existing/correct city the getWeatherNow() method from WeatherController
      * returns a json response with a message and an error code.
      */
     @Test
-    public void whenCityIsNullOrInvalid_thenReturnJsonResponse() {
-        String city = "";
+    public void whenCityIsInvalid_thenReturnJsonResponse() {
+        String city = "kjhdal";
         JsonObject expectedResponse = new JsonObject();
         expectedResponse.addProperty("message", "This city is not in our database!");
         expectedResponse.addProperty("code", "404");
 
         given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
 
-        mvc.perform(get("/weather/" + city)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", expectedResponse.get("message")))
-                .andExpect(jsonPath("$.code", expectedResponse.get("code")));
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setLenient().create();
+
+        try {
+            mvc.perform(get("/weather/" + city)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message", is(expectedResponse.get("message").getAsString())))
+                    .andExpect(jsonPath("$.code", is(expectedResponse.get("code").getAsString())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

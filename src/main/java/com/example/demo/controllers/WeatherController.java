@@ -22,7 +22,7 @@ public class WeatherController {
         JsonParser parser = new JsonParser();
         JsonObject jo = parser.parse(weather).getAsJsonObject();
         if (jo.has("code"))
-            return new ResponseEntity<String>(weather, HttpStatus.NOT_FOUND);
-        return new ResponseEntity<String>(weather, HttpStatus.OK);
+            return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 }
