@@ -9,6 +9,7 @@ import com.example.demo.handlers.RestTemplateResponseErrorHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,6 @@ public class WeatherCrawler {
 
     @Scheduled(cron = "0 0 2 ? * *")
     public void crawl() {
-
         JsonOperations jsonOperations = new JsonOperations();
         for (Cities city : Cities.values()) {
             RestTemplate restTemplate = new RestTemplate();
