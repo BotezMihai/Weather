@@ -19,9 +19,10 @@ import java.io.IOException;
 @Configuration
 public class WeatherService {
     @Value("${url.weatherUrl}")
-    String apiUrl;
+    private String apiUrl;
     @Value("${key.keyForApi}")
-    String apiKey;
+    private String apiKey;
+  
     public InitialiseNewWeatherObject initialiseWeather;
 
     @Autowired
@@ -49,4 +50,3 @@ public class WeatherService {
         return gson.toJson(jsonOperations.getJsonObject("{ \"message\" : \"This city is not in our database!\", \"code\": \"404\"}"));
     }
 }
-
