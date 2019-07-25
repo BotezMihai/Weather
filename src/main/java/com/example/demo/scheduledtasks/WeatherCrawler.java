@@ -1,14 +1,15 @@
 package com.example.demo.scheduledtasks;
 
+import com.example.demo.commonfunctions.InitialiseNewWeatherObject;
+import com.example.demo.commonfunctions.JsonOperations;
+import com.example.demo.commonfunctions.SharedVariables;
 import com.example.demo.entity.Weather;
+import com.example.demo.enums.Cities;
 import com.example.demo.handlers.RestTemplateResponseErrorHandler;
-
-import com.google.gson.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -26,78 +27,29 @@ public class WeatherCrawler {
     @Autowired
     RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
-    @Value("${api.weatherUrl}")
+    @Value("${url.weatherUrl}")
     String apiUrl;
+    @Value("${key.keyForApi}")
+    String apiKey;
+    public InitialiseNewWeatherObject initialiseWeather;
+
     @Scheduled(cron = "0 0 2 ? * *")
     public void crawl() {
-        // do an enum out of this
-        String[] cities = {"Alba", "Arad", "Bacau", "Botosani", "Braila", "Brasov", "Bucuresti", "Buzau", "Calarasi", "Caras Severin", "Cluj", "Constanta", "Covasna", "Dambovita", "Dolj", "Galati", "Giurgiu", "Gorj", "Harghita", "Hunedoara", "Ialomita", "Iasi", "Ilfov", "Maramures", "Mehedinti", "Mures", "Neamt", "Olt", "Prahova", "Salaj", "Satu Mare", "Sibiu", "Suceava", "Teleorman", "Timis", "Tulcea", "Valcea", "Vaslui", "Vrancea"};
-        for (String city : cities) {
-            // call to OWM API
 
-            // put this in the yml file
-            String key = "58f9b3be23fbf4bff065c9fa498cbe75";
-
+        JsonOperations jsonOperations = new JsonOperations();
+        for (Cities city : Cities.values()) {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
-            String url = apiUrl + city + ",RO&APPID=" + key;
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            String body = response.getBody();
-
-            // get JSON response
-            JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
-            String responseCode = jsonObject.get("cod").getAsString();
-
-            if (!responseCode.equals(HttpStatus.NOT_FOUND.value())) {
-                JsonElement weatherElement = jsonObject.get("weather").getAsJsonArray().get(0);
-
-                // create weather object
+            String url = apiUrl + city + ",RO&APPID=" + apiKey;
+            SharedVariables sharedVariables = new SharedVariables(restTemplate, url);
+            if (!sharedVariables.getResponseCode().equals(HttpStatus.NOT_FOUND.value())) {
                 Weather weather = new Weather();
-                weather.setMain(weatherElement.getAsJsonObject().get("main").getAsString());
-                weather.setDescription(weatherElement.getAsJsonObject().get("description").getAsString());
-                weather.setUmidity(jsonObject.get("main").getAsJsonObject().get("humidity").getAsDouble());
-                weather.setWindSpeed(jsonObject.get("wind").getAsJsonObject().get("speed").getAsDouble());
-                weather.setClouds(jsonObject.get("clouds").getAsJsonObject().get("all").getAsDouble());
-                JsonObject sysElement = jsonObject.get("sys").getAsJsonObject();
-                weather.setCountry(sysElement.get("country").getAsString());
-                weather.setCity(jsonObject.get("name").getAsString());
-
-                // converting from fahrenheit to celsius metric
-                double kelvin = jsonObject.get("main").getAsJsonObject().get("temp").getAsDouble();
-                double celsius = kelvin -273.15;
-                weather.setTemperature(celsius);
-
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.setLenient().create();
-
-                // read from weather.json
-                File jsonFile = new File("weather.json");
-                JsonElement fileContent = null;
+                initialiseWeather = new InitialiseNewWeatherObject();
+                weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
                 try {
-                    fileContent = new JsonParser().parse(new FileReader(jsonFile.getAbsolutePath()));
-                } catch (FileNotFoundException e) {
-                    System.out.println("There was a problem trying to read from the file!");
-                }
-
-                JsonArray fileArray = null;
-                if (fileContent != null) {
-                    fileArray = fileContent.getAsJsonArray();
-                }
-
-                // add element in json array
-                if (fileArray != null) {
-                    fileArray.add(gson.toJson(weather));
-                }
-
-                // write to file
-                String jsonString = gson.toJson(fileArray);
-                FileWriter fileWriter;
-                try {
-                    fileWriter = new FileWriter(jsonFile.getAbsolutePath());
-                    fileWriter.write(jsonString);
-                    fileWriter.close();
+                    jsonOperations.writeJson(weather);
                 } catch (IOException e) {
-                    System.out.println("There was a problem writing in/closing the file!");
+                    e.printStackTrace();
                 }
             }
         }
