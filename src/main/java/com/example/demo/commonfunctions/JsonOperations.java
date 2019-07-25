@@ -14,6 +14,12 @@ public class JsonOperations {
 
     }
 
+    /**
+     *
+     * @param weather
+     * it parse  a json file to an array and add a new json element
+     * @throws IOException
+     */
     public void writeJson(Weather weather) throws IOException {
 
         GsonBuilder builder = new GsonBuilder();
@@ -31,6 +37,12 @@ public class JsonOperations {
         fileWriter.close();
     }
 
+    /**
+     *
+     * @param json
+     * given a json string, it returns a json object
+     * @return
+     */
     public JsonObject getJsonObject(String json) {
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(json).getAsJsonObject();
