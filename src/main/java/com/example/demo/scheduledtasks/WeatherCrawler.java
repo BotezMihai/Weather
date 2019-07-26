@@ -39,7 +39,6 @@ public class WeatherCrawler {
     String apiKey;
     public InitialiseNewWeatherObject initialiseWeather;
 
-
     @Scheduled(fixedRate = 10000)
     //, lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S"
     @SchedulerLock(name = "crawl", lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S")

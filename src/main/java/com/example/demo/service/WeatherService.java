@@ -5,6 +5,7 @@ import com.example.demo.commonfunctions.JsonOperations;
 import com.example.demo.commonfunctions.SharedVariables;
 import com.example.demo.entity.Weather;
 import com.example.demo.handlers.RestTemplateResponseErrorHandler;
+import com.example.demo.interfaces.WeatherRepository;
 import com.google.gson.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class WeatherService {
     @Autowired
     RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
+    @Autowired
+    WeatherRepository weatherRepository;
+
     public String getWeatherNow(String place) {
         RestTemplate restTemplate = new RestTemplate();
         GsonBuilder builder = new GsonBuilder();
@@ -48,5 +52,9 @@ public class WeatherService {
             return gson.toJson(weather);
         }
         return gson.toJson(jsonOperations.getJsonObject("{ \"message\" : \"This city is not in our database!\", \"code\": \"404\"}"));
+    }
+
+    public void createWeather(Weather weather) {
+        weatherRepository.save(weather);
     }
 }
