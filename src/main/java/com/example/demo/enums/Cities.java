@@ -7,7 +7,7 @@ public enum Cities {
     BOTOSANI,
     BRAILA,
     BRASOV,
-    BUCURESTI,
+    BUCHAREST,
     BUZAU,
     CALARASI,
     CLUJ,
