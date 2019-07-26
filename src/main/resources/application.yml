@@ -3,6 +3,6 @@ server:
 
 url:
   weatherUrl: https://api.openweathermap.org/data/2.5/weather?q=
+
 key:
   keyForApi: 58f9b3be23fbf4bff065c9fa498cbe75
-
