@@ -1,4 +1,7 @@
 package com.example.demo.interfaces;
 
-public class WeatherRepository {
+import com.example.demo.entity.Weather;
+import org.springframework.data.repository.CrudRepository;
+
+public interface WeatherRepository extends CrudRepository<Weather, Integer> {
 }

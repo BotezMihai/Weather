@@ -34,7 +34,7 @@ public class WeatherCrawler {
     String apiKey;
     public InitialiseNewWeatherObject initialiseWeather;
 
-    @Scheduled(cron = "0 0 2 ? * *")
+    @Scheduled(cron = "0 0 * ? * *")
     public void crawl() {
         JsonOperations jsonOperations = new JsonOperations();
         for (Cities city : Cities.values()) {
