@@ -8,6 +8,10 @@ import com.example.demo.enums.Cities;
 import com.example.demo.handlers.RestTemplateResponseErrorHandler;
 
 import com.example.demo.service.WeatherService;
+import com.mongodb.MongoClient;
+import net.javacrumbs.shedlock.core.LockProvider;
+import net.javacrumbs.shedlock.core.SchedulerLock;
+import net.javacrumbs.shedlock.provider.mongo.MongoLockProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -34,7 +38,9 @@ public class WeatherCrawler {
     public WeatherCrawler() {
     }
 
-    @Scheduled(cron = "0 0 * ? * *")
+    @Scheduled(fixedRate = 10000)
+    //, lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S"
+    @SchedulerLock(name = "crawl", lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S")
     public void crawl() {
         JsonOperations jsonOperations = new JsonOperations();
         for (Cities city : Cities.values()) {
@@ -42,7 +48,7 @@ public class WeatherCrawler {
             restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
             String url = apiUrl + city + ",RO&APPID=" + apiKey;
             SharedVariables sharedVariables = new SharedVariables(restTemplate, url);
-            if (!sharedVariables.getResponseCode().equals(HttpStatus.NOT_FOUND.value())) {
+            if (Integer.parseInt(sharedVariables.getResponseCode())!=(HttpStatus.NOT_FOUND.value())) {
                 Weather weather = new Weather();
                 initialiseWeather = new InitialiseNewWeatherObject();
                 weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
@@ -54,5 +60,10 @@ public class WeatherCrawler {
                 weatherService.createWeather(weather);
             }
         }
+    }
+
+    @Bean
+    public LockProvider lockProvider(MongoClient mongo) {
+        return new MongoLockProvider(mongo, "shedLock");
     }
 }

@@ -6,3 +6,8 @@ url:
 
 key:
   keyForApi: 58f9b3be23fbf4bff065c9fa498cbe75
+spring:
+  data:
+    mongodb:
+      database: shedLock
+      uri: mongodb+srv://admin:<admin>@weather-abfut.mongodb.net/test?retryWrites=true&w=majority
