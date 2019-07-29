@@ -23,14 +23,14 @@ public class WeatherService {
     private String apiUrl;
     @Value("${key.keyForApi}")
     private String apiKey;
-  
-    public InitialiseNewWeatherObject initialiseWeather;
+
+    private InitialiseNewWeatherObject initialiseWeather;
 
     @Autowired
-    RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
+    private RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
     @Autowired
-    WeatherRepository weatherRepository;
+    private WeatherRepository weatherRepository;
 
     public String getWeatherNow(String place) {
         RestTemplate restTemplate = new RestTemplate();
@@ -42,13 +42,14 @@ public class WeatherService {
         SharedVariables sharedVariables = new SharedVariables(restTemplate, url);
         if (sharedVariables.getResponseCode().equals("200")) {
             initialiseWeather = new InitialiseNewWeatherObject();
-            Weather weather = new Weather();
+            Weather weather;
             weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
             try {
                 jsonOperations.writeJson(weather);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            createWeather(weather);
             return gson.toJson(weather);
         }
         return gson.toJson(jsonOperations.getJsonObject("{ \"message\" : \"This city is not in our database!\", \"code\": \"404\"}"));

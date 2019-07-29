@@ -38,9 +38,4 @@ public class WeatherController {
         return new WeatherDto("not found");
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> insertStudent(@RequestBody Weather weather) {
-        weatherService.createWeather(weather);
-        return new ResponseEntity<String>("Added the student " + weather, HttpStatus.OK);
-    }
 }
