@@ -4,6 +4,12 @@ spring:
     username: weatherapp
     password: lucratorcomputer
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    mongodb:
+      database: shedLock
+      uri: mongodb+srv://admin:admin@weather-abfut.mongodb.net/test?retryWrites=true&w=majority
+      admin: admin
+      password: admin
   profiles:
     cloud
   jpa:
