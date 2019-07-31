@@ -11,6 +11,7 @@ import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,7 +25,7 @@ public class WeatherService {
     @Value("${key.keyForApi}")
     private String apiKey;
 
-    private InitialiseNewWeatherObject initialiseWeather;
+    private InitialiseNewWeatherObject initialiseWeather = new InitialiseNewWeatherObject();
 
     @Autowired
     private RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
@@ -32,27 +33,23 @@ public class WeatherService {
     @Autowired
     private WeatherRepository weatherRepository;
 
-    public String getWeatherNow(String place) {
+    public Weather getWeatherNow(String place) {
         RestTemplate restTemplate = new RestTemplate();
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setLenient().create();
         JsonOperations jsonOperations = new JsonOperations();
         String url = apiUrl + place + "&APPID=" + apiKey;
         restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
         SharedVariables sharedVariables = new SharedVariables(restTemplate, url);
-        if (sharedVariables.getResponseCode().equals("200")) {
-            initialiseWeather = new InitialiseNewWeatherObject();
-            Weather weather;
-            weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
+        if (sharedVariables.getResponseCode().equals(String.valueOf(HttpStatus.OK.value()))) {
+            Weather weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
             try {
                 jsonOperations.writeJson(weather);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             createWeather(weather);
-            return gson.toJson(weather);
+            return weather;
         }
-        return gson.toJson(jsonOperations.getJsonObject("{ \"message\" : \"This city is not in our database!\", \"code\": \"404\"}"));
+        return new Weather();
     }
 
     public void createWeather(Weather weather) {

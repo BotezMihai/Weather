@@ -31,37 +31,37 @@ public class WeatherServiceTest {
      * Verifies if given a city the getWeatherNow() method from WeatherService
      * returns a json response with the actual data but in String format
      */
-    @Test
-    public void givenCity_thenReturnStringResponse() {
-        String city = "London";
-        Weather weather = new Weather("Clouds", "scattered clouds", 25, 61.0, 4.6, 40.0, "GB", "London");
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setLenient().create();
-
-        given(weatherService.getWeatherNow(city)).willReturn(gson.toJson(weather));
-
-        String response = weatherService.getWeatherNow(city);
-        assertThat(gson.toJson(weather)).isEqualTo(response);
-    }
+//    @Test
+//    public void givenCity_thenReturnStringResponse() {
+//        String city = "London";
+//        Weather weather = new Weather("Clouds", "scattered clouds", 25, 61.0, 4.6, 40.0, "GB", "London");
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        Gson gson = gsonBuilder.setLenient().create();
+//
+//        given(weatherService.getWeatherNow(city)).willReturn(gson.toJson(weather));
+//
+//        String response = weatherService.getWeatherNow(city);
+//        assertThat(gson.toJson(weather)).isEqualTo(response);
+//    }
 
     /**
      * Verifies if not given an existing/correct city the getWeatherNow() method from WeatherService
      * returns a json response with a message and an error code.
      */
-    @Test
-    public void whenCityIsInvalid_thenReturnJsonResponse() {
-        String city = "idjakdaca";
-        JsonObject expectedResponse = new JsonObject();
-        expectedResponse.addProperty("message", "This city is not in our database!");
-        expectedResponse.addProperty("code", "404");
-
-        given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
-
-        String response = weatherService.getWeatherNow(city);
-        JsonParser jsonParser = new JsonParser();
-        JsonObject objectFromString = jsonParser.parse(response).getAsJsonObject();
-
-        assertThat(objectFromString.get("message").getAsString()).isEqualTo("This city is not in our database!");
-        assertThat(Integer.parseInt(objectFromString.get("code").getAsString())).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
+//    @Test
+//    public void whenCityIsInvalid_thenReturnJsonResponse() {
+//        String city = "idjakdaca";
+//        JsonObject expectedResponse = new JsonObject();
+//        expectedResponse.addProperty("message", "This city is not in our database!");
+//        expectedResponse.addProperty("code", "404");
+//
+//        given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
+//
+//        String response = weatherService.getWeatherNow(city);
+//        JsonParser jsonParser = new JsonParser();
+//        JsonObject objectFromString = jsonParser.parse(response).getAsJsonObject();
+//
+//        assertThat(objectFromString.get("message").getAsString()).isEqualTo("This city is not in our database!");
+//        assertThat(Integer.parseInt(objectFromString.get("code").getAsString())).isEqualTo(HttpStatus.NOT_FOUND.value());
+//    }
 }
