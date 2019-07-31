@@ -33,8 +33,9 @@ public class WeatherController {
         String weather = weatherService.getWeatherNow(place);
         JsonParser parser = new JsonParser();
         JsonObject jo = parser.parse(weather).getAsJsonObject();
+        Weather weatherObj = new Weather(jo.get("main").getAsString(), jo.get("description").getAsString(), jo.get("temperature").getAsDouble(), jo.get("umidity").getAsDouble(), jo.get("windSpeed").getAsDouble(), jo.get("clouds").getAsDouble(), jo.get("country").getAsString(), jo.get("city").getAsString());
         if (!jo.has("code"))
-            return new WeatherDto(jo.get("main").getAsString(), jo.get("description").getAsString(), jo.get("temperature").getAsDouble(), jo.get("umidity").getAsDouble(), jo.get("windSpeed").getAsDouble(), jo.get("clouds").getAsDouble(), jo.get("country").getAsString(), jo.get("city").getAsString(), "ok");
+            return new WeatherDto(weatherObj,"ok");
         return new WeatherDto("not found");
     }
 

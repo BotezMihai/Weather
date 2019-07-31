@@ -14,5 +14,5 @@ spring:
     cloud
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
       dialect: org.hibernate.dialect.mysqldialect

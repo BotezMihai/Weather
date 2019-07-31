@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Weather;
+
 public class WeatherDto {
     private String main;
     private String description;
@@ -20,6 +22,18 @@ public class WeatherDto {
         this.clouds = clouds;
         this.country = country;
         this.city = city;
+        this.status = status;
+    }
+
+    public WeatherDto(Weather weather, String status) {
+        this.main = weather.getMain();
+        this.description = weather.getDescription();
+        this.city = weather.getCity();
+        this.country = weather.getCountry();
+        this.clouds = weather.getClouds();
+        this.temperature = weather.getTemperature();
+        this.umidity = weather.getUmidity();
+        this.windSpeed = weather.getWindSpeed();
         this.status = status;
     }
 

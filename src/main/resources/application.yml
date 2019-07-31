@@ -6,3 +6,7 @@ url:
 
 key:
   keyForApi: 58f9b3be23fbf4bff065c9fa498cbe75
+
+spring:
+  application:
+    name: weather

@@ -1,3 +1,19 @@
-profiles:
-  dev
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/weather
+    username: root
+    password: lucratorcomputer
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    mongodb:
+      database: shedLock
+      uri: mongodb+srv://admin:admin@weather-abfut.mongodb.net/test?retryWrites=true&w=majority
+      admin: admin
+      password: admin
+  profiles:
+    dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      dialect: org.hibernate.dialect.mysqldialect
 

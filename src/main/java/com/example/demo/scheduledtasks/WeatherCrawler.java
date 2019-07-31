@@ -38,9 +38,9 @@ public class WeatherCrawler {
     public WeatherCrawler() {
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(cron = "0 29 0 * * *")
     //, lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S"
-    @SchedulerLock(name = "crawl", lockAtMostForString ="PT40S",lockAtLeastForString ="PT40S")
+    @SchedulerLock(name = "crawl", lockAtMostForString = "PT40S", lockAtLeastForString = "PT40S")
     public void crawl() {
         JsonOperations jsonOperations = new JsonOperations();
         for (Cities city : Cities.values()) {
@@ -48,8 +48,8 @@ public class WeatherCrawler {
             restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
             String url = apiUrl + city + ",RO&APPID=" + apiKey;
             SharedVariables sharedVariables = new SharedVariables(restTemplate, url);
-            if (Integer.parseInt(sharedVariables.getResponseCode())!=(HttpStatus.NOT_FOUND.value())) {
-                Weather weather = new Weather();
+            if (Integer.parseInt(sharedVariables.getResponseCode()) != (HttpStatus.NOT_FOUND.value())) {
+                Weather weather;
                 initialiseWeather = new InitialiseNewWeatherObject();
                 weather = initialiseWeather.functionInitialiseNewWeatherObject(sharedVariables.getJsonObject());
                 try {
