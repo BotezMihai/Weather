@@ -19,24 +19,19 @@ public class WeatherController {
     private WeatherService weatherService;
 
     @RequestMapping(value = "/{place}", method = RequestMethod.GET)
-    public ResponseEntity<String> getWeatherNow(@PathVariable("place") String place) {
-        String weather = weatherService.getWeatherNow(place);
-        JsonParser parser = new JsonParser();
-        JsonObject jo = parser.parse(weather).getAsJsonObject();
-        if (jo.has("code"))
+    public ResponseEntity<Weather> getWeatherNow(@PathVariable("place") String place) {
+        Weather weather = weatherService.getWeatherNow(place);
+        if (weather.getMain() != null)
             return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/dto/{place}", method = RequestMethod.GET)
     public WeatherDto getDtoWeatherNow(@PathVariable("place") String place) {
-        String weather = weatherService.getWeatherNow(place);
-        JsonParser parser = new JsonParser();
-        JsonObject jo = parser.parse(weather).getAsJsonObject();
-        Weather weatherObj = new Weather(jo.get("main").getAsString(), jo.get("description").getAsString(), jo.get("temperature").getAsDouble(), jo.get("umidity").getAsDouble(), jo.get("windSpeed").getAsDouble(), jo.get("clouds").getAsDouble(), jo.get("country").getAsString(), jo.get("city").getAsString());
-        if (!jo.has("code"))
-            return new WeatherDto(weatherObj,"ok");
-        return new WeatherDto("not found");
+        Weather weather = weatherService.getWeatherNow(place);
+        if (weather.getMain() != null)
+            return new WeatherDto(weather, HttpStatus.OK.toString());
+        return new WeatherDto(HttpStatus.NOT_FOUND.toString());
     }
 
 }

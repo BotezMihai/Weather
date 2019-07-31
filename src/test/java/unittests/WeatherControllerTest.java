@@ -39,50 +39,50 @@ public class WeatherControllerTest {
      * Verifies if given a city the getWeatherNow() method from WeatherController
      * returns a json response with actual data
      */
-    @Test
-    public void givenCity_thenReturnJsonResponse() {
-        String city = "London";
-        Weather weather = new Weather("Clouds", "scattered clouds", 25, 61.0, 4.6, 40.0, "GB", "London");
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setLenient().create();
-
-        given(weatherService.getWeatherNow(city)).willReturn(gson.toJson(weather));
-
-        try {
-            mvc.perform(get("/weather/" + city)
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.city", is(weather.getCity())))
-                    .andExpect(jsonPath("$.country", is(weather.getCountry())));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void givenCity_thenReturnJsonResponse() {
+//        String city = "London";
+//        Weather weather = new Weather("Clouds", "scattered clouds", 25, 61.0, 4.6, 40.0, "GB", "London");
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        Gson gson = gsonBuilder.setLenient().create();
+//
+//        given(weatherService.getWeatherNow(city)).willReturn(gson.toJson(weather));
+//
+//        try {
+//            mvc.perform(get("/weather/" + city)
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isOk())
+//                    .andExpect(jsonPath("$.city", is(weather.getCity())))
+//                    .andExpect(jsonPath("$.country", is(weather.getCountry())));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * Verifies if not given an existing/correct city the getWeatherNow() method from WeatherController
      * returns a json response with a message and an error code.
      */
-    @Test
-    public void whenCityIsInvalid_thenReturnJsonResponse() {
-        String city = "kjhdal";
-        JsonObject expectedResponse = new JsonObject();
-        expectedResponse.addProperty("message", "This city is not in our database!");
-        expectedResponse.addProperty("code", "404");
-
-        given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setLenient().create();
-
-        try {
-            mvc.perform(get("/weather/" + city)
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message", is(expectedResponse.get("message").getAsString())))
-                    .andExpect(jsonPath("$.code", is(expectedResponse.get("code").getAsString())));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void whenCityIsInvalid_thenReturnJsonResponse() {
+//        String city = "kjhdal";
+//        JsonObject expectedResponse = new JsonObject();
+//        expectedResponse.addProperty("message", "This city is not in our database!");
+//        expectedResponse.addProperty("code", "404");
+//
+//        given(weatherService.getWeatherNow(city)).willReturn(expectedResponse.toString());
+//
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        Gson gson = gsonBuilder.setLenient().create();
+//
+//        try {
+//            mvc.perform(get("/weather/" + city)
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isNotFound())
+//                    .andExpect(jsonPath("$.message", is(expectedResponse.get("message").getAsString())))
+//                    .andExpect(jsonPath("$.code", is(expectedResponse.get("code").getAsString())));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
