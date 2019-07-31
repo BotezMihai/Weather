@@ -11,7 +11,8 @@ spring:
       admin: admin
       password: admin
   profiles:
-    cloud
+    active:
+      cloud
   jpa:
     hibernate:
       ddl-auto: validate
