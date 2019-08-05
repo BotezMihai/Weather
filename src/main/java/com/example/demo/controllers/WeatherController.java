@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.commonfunctions.SharedVariables;
 import com.example.demo.dto.WeatherDto;
 import com.example.demo.entity.Weather;
 import com.example.demo.service.WeatherService;
@@ -21,6 +22,7 @@ public class WeatherController {
     @RequestMapping(value = "/{place}", method = RequestMethod.GET)
     public ResponseEntity<Weather> getWeatherNow(@PathVariable("place") String place) {
         Weather weather = weatherService.getWeatherNow(place);
+        System.out.println(SharedVariables.getCount());
         if (weather.getMain() != null)
             return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(weather, HttpStatus.OK);
