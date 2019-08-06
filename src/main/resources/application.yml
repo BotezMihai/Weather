@@ -1,6 +1,9 @@
 server:
   port: 8081
 
+api:
+  numberOfApiCallsPerMinute: 60
+
 url:
   weatherUrl: https://api.openweathermap.org/data/2.5/weather?q=
 

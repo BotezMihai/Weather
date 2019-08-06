@@ -2,6 +2,9 @@ package com.example.demo.dto;
 
 import com.example.demo.entity.Weather;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class WeatherDto {
     private String main;
     private String description;
@@ -11,6 +14,7 @@ public class WeatherDto {
     private double clouds;
     private String country;
     private String city;
+    private Date timestamp;
     private String status;
 
     public WeatherDto(String main, String description, double temperature, double umidity, double windSpeed, double clouds, String country, String city, String status) {
@@ -22,7 +26,8 @@ public class WeatherDto {
         this.clouds = clouds;
         this.country = country;
         this.city = city;
-        this.status = status;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timestamp = new Date(ts.getTime());        this.status = status;
     }
 
     public WeatherDto(Weather weather, String status) {
@@ -34,6 +39,7 @@ public class WeatherDto {
         this.temperature = weather.getTemperature();
         this.umidity = weather.getUmidity();
         this.windSpeed = weather.getWindSpeed();
+        this.timestamp = weather.getTimestamp();
         this.status = status;
     }
 
@@ -46,6 +52,8 @@ public class WeatherDto {
         this.clouds = 0;
         this.country = null;
         this.city = null;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timestamp = new Date(ts.getTime());
         this.status = status;
     }
 
@@ -119,5 +127,13 @@ public class WeatherDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }
