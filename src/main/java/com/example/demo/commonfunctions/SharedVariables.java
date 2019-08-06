@@ -10,6 +10,7 @@ public class SharedVariables {
     private String body;
     private JsonObject jsonObject;
     private String responseCode;
+    private static int count = 0;
 
     public SharedVariables(RestTemplate restTemplate, String url) {
         JsonOperations jsonOperations = new JsonOperations();
@@ -18,6 +19,10 @@ public class SharedVariables {
         this.body = response.getBody();
         this.jsonObject = jsonOperations.getJsonObject(body);
         this.responseCode = jsonObject.get("cod").getAsString();
+    }
+
+    public SharedVariables() {
+
     }
 
     public RestTemplate getRestTemplate() {
@@ -38,5 +43,13 @@ public class SharedVariables {
 
     public String getResponseCode() {
         return responseCode;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        SharedVariables.count = count;
     }
 }

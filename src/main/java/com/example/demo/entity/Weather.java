@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 public class Weather {
@@ -18,6 +20,7 @@ public class Weather {
     private double clouds;
     private String country;
     private String city;
+    private Date timestamp;
 
     public Weather(String main, String description, double temperature, double umidity, double windSpeed, double clouds, String country, String city) {
         this.main = main;
@@ -28,10 +31,13 @@ public class Weather {
         this.clouds = clouds;
         this.country = country;
         this.city = city;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timestamp = new Date(ts.getTime());
     }
 
     public Weather() {
-
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timestamp = new Date(ts.getTime());
     }
 
     public Integer getId() {
@@ -104,5 +110,13 @@ public class Weather {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }
