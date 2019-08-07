@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class CountIncrementAspect {
-//    @Around(value = "@annotation(com.example.demo.aspects.CountIncrement)")
-    @Before("execution(* com.example.demo.service.WeatherService.getWeatherNow(..))")
+    @Before(value = "@annotation(com.example.demo.annotations.CountIncrement)")
+//    @Before("execution(* com.example.demo.service.WeatherService.getWeatherNow(..))")
     public void countIncrement() {
         SharedVariables.setCount(SharedVariables.getCount() + 1);
     }

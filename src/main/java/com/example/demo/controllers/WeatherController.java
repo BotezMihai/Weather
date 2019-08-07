@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/weather")
 @Component
@@ -23,7 +21,7 @@ public class WeatherController {
     @RequestMapping(value = "/{city}", method = RequestMethod.GET)
     public ResponseEntity<Weather> getWeatherNow(@PathVariable("city") String city) {
         Weather weather = weatherService.getWeatherNow(city);
-        if (weather.getMain() != null)
+        if (weather.getMain() == null)
             return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(weather, HttpStatus.OK);
     }
@@ -31,8 +29,8 @@ public class WeatherController {
     @RequestMapping(value = "/dto/{city}", method = RequestMethod.GET)
     public WeatherDto getDtoWeatherNow(@PathVariable("city") String city) {
         Weather weather = weatherService.getWeatherNow(city);
-        if (weather.getMain() != null)
-            return new WeatherDto(weather, HttpStatus.OK.toString());
-        return new WeatherDto(HttpStatus.NOT_FOUND.toString());
+        if (weather.getMain() == null)
+            return new WeatherDto(weather, HttpStatus.NOT_FOUND.toString());
+        return new WeatherDto(HttpStatus.OK.toString());
     }
 }

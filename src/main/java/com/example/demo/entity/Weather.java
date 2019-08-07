@@ -1,9 +1,8 @@
 package com.example.demo.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.cache.annotation.EnableCaching;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 

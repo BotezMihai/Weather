@@ -10,6 +10,8 @@ import com.example.demo.interfaces.WeatherRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 @Service
 @Configuration
+@EnableCaching
 public class WeatherService {
     @Value("${url.weatherUrl}")
     private String apiUrl;
@@ -45,6 +48,7 @@ public class WeatherService {
      * @return the forecast for the city
      */
     @CountIncrement
+    @Cacheable(value = "weathers")
     public Weather getWeatherNow(String city) {
         if (SharedVariables.getCount() <= this.numberOfApiCallsPerMinute) {
             RestTemplate restTemplate = new RestTemplate();
