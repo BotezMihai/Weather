@@ -17,3 +17,7 @@ spring:
       ddl-auto: validate
       dialect: org.hibernate.dialect.mysqldialect
 
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/

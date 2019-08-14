@@ -17,3 +17,8 @@ spring:
     hibernate:
       ddl-auto: validate
       dialect: org.hibernate.dialect.mysqldialect
+
+eureka:
+  client:
+    service-url:
+      default-zone: https://weather-app-eureka-server.herokuapp.com/
