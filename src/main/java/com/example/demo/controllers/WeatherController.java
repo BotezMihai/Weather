@@ -18,19 +18,19 @@ public class WeatherController {
     @Autowired
     private WeatherService weatherService;
 
-    @RequestMapping(value = "/{city}", method = RequestMethod.GET)
-    public ResponseEntity<Weather> getWeatherNow(@PathVariable("city") String city) {
-        Weather weather = weatherService.getWeatherNow(city);
-        if (weather.getMain() == null)
-            return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(weather, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/{city}", method = RequestMethod.GET)
+//    public ResponseEntity<Weather> getWeatherNow(@PathVariable("city") String city) {
+//        Weather weather = weatherService.getWeatherNow(city);
+//        if (weather.getMain() == null)
+//            return new ResponseEntity<>(weather, HttpStatus.NOT_FOUND);
+//        return new ResponseEntity<>(weather, HttpStatus.OK);
+//    }
 
-    @RequestMapping(value = "/dto/{city}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{city}", method = RequestMethod.GET)
     public WeatherDto getDtoWeatherNow(@PathVariable("city") String city) {
         Weather weather = weatherService.getWeatherNow(city);
-        if (weather.getMain() == null)
-            return new WeatherDto(weather, HttpStatus.NOT_FOUND.toString());
-        return new WeatherDto(HttpStatus.OK.toString());
+        if (weather.getMain() != null)
+            return new WeatherDto(weather, HttpStatus.OK.toString());
+        return new WeatherDto(HttpStatus.NOT_FOUND.toString());
     }
 }
